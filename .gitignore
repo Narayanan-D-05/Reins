@@ -1,0 +1,31 @@
+# Secrets - never commit
+.env
+.env.*
+!.env.example
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/*/31337/
+contracts/lib/
+
+# Node
+node_modules/
+backend/dist/
+backend/build/
+npm-debug.log*
+pnpm-debug.log*
+
+# Envio
+indexer/generated/
+indexer/.envio/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+Reins_v4_PRD.md
+rule.md
+sponser.md
+.claude

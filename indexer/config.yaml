@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: reins-indexer
+description: >
+  Indexes PaymentCleared, PaymentBlocked, PolicySet, Paused, and
+  AttestationIssued across every Reins account for the live dashboard and
+  at-risk meter (PRD §7, §12 MUST BUILD).
+contracts:
+  - name: ReinsAccountFactory
+    handler: src/handlers/factory.ts
+    events:
+      - event: "AccountCreated(address indexed creator, address indexed account, uint256 ownerPubKeyX, uint256 ownerPubKeyY)"
+
+  # No static address here — every ReinsAccount is a per-owner instance
+  # deployed by the factory at runtime. Instances are registered
+  # dynamically in src/handlers/factory.ts via context.chain.ReinsAccount.add(...).
+  - name: ReinsAccount
+    handler: src/handlers/reinsAccount.ts
+    events:
+      - event: "PolicySet(address indexed agentKey, bytes32 mandateDigest, uint256 nonce)"
+      - event: "Paused(address indexed agentKey, bool all)"
+      - event: "PaymentCleared(address indexed agentKey, address indexed payee, uint256 amount, bytes32 category, uint256 receiptId, uint256 attestationId)"
+      - event: "PaymentBlocked(address indexed agentKey, address indexed payee, uint256 amount, bytes32 category, string reason)"
+
+  - name: Attestor
+    handler: src/handlers/attestor.ts
+    events:
+      - event: "AttestationIssued(uint256 indexed attestationId, address indexed account, address indexed agentKey, uint256 receiptId)"
+
+  - name: ReceiptBook
+    handler: src/handlers/receiptBook.ts
+    events:
+      - event: "ReceiptRecorded(uint256 indexed receiptId, address indexed account, address indexed payee, address agentKey, uint256 amount, bytes32 category)"
+
+networks:
+  - id: 10143 # Monad Testnet
+    start_block: 0
+    contracts:
+      # Fill in after `forge script script/Deploy.s.sol:Deploy --broadcast`
+      # in ../contracts — these are the same addresses that go into
+      # ../backend/.env.
+      - name: ReinsAccountFactory
+        address: "0x0000000000000000000000000000000000000000"
+      - name: ReinsAccount
+      - name: Attestor
+        address: "0x0000000000000000000000000000000000000000"
+      - name: ReceiptBook
+        address: "0x0000000000000000000000000000000000000000"

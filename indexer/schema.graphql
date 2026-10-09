@@ -1,0 +1,91 @@
+type ReinsAccountEntity {
+  id: ID! # the account address
+  creator: String!
+  ownerPubKeyX: BigInt!
+  ownerPubKeyY: BigInt!
+  createdAtBlock: BigInt!
+  createdAtTimestamp: BigInt!
+}
+
+type PolicySetEvent {
+  id: ID!
+  account: String!
+  agentKey: String!
+  mandateDigest: String!
+  nonce: BigInt!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+type PausedEvent {
+  id: ID!
+  account: String!
+  agentKey: String!
+  all: Boolean!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+type PaymentClearedEvent {
+  id: ID!
+  account: String!
+  agentKey: String!
+  payee: String!
+  amount: BigInt!
+  category: String!
+  receiptId: BigInt!
+  attestationId: BigInt!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+type PaymentBlockedEvent {
+  id: ID!
+  account: String!
+  agentKey: String!
+  payee: String!
+  amount: BigInt!
+  category: String!
+  reason: String!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+type AttestationIssuedEvent {
+  id: ID! # attestationId
+  account: String!
+  agentKey: String!
+  receiptId: BigInt!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+type ReceiptRecordedEvent {
+  id: ID! # receiptId
+  account: String!
+  payee: String!
+  agentKey: String!
+  amount: BigInt!
+  category: String!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  txHash: String!
+}
+
+# Singleton aggregate feeding the dashboard's at-risk meter: the ratio of
+# blocked to cleared payments across every Reins account, recomputed
+# incrementally as events arrive.
+type GlobalStats {
+  id: ID! # constant "global"
+  totalPaymentsCleared: BigInt!
+  totalPaymentsBlocked: BigInt!
+  totalVolumeClearedWei: BigInt!
+  blockedBySettlementUnverified: BigInt!
+  blockedByRevoked: BigInt!
+  blockedByOther: BigInt!
+}

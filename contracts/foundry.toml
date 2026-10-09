@@ -1,0 +1,49 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.26"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+# "cancun" is the conservative, confirmed-safe compile target for bytecode
+# that will actually be deployed to Monad. Monad's node implements the
+# P256 precompile at 0x0100 as a runtime feature independent of this
+# setting — it is not gated behind any particular solc EVM-version target.
+evm_version = "cancun"
+remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/",
+]
+
+[profile.default.fuzz]
+runs = 512
+
+# Local-only test profile. Foundry's bundled revm does not simulate the
+# P256/secp256r1 precompile under a "cancun" ruleset (it's emulated under
+# revm's "osaka" hardfork spec in this Foundry build) — this profile exists
+# purely so `forge test` can exercise real P256 signature verification
+# against the local simulator. It must never be used to build deployment
+# artifacts; run tests with `FOUNDRY_PROFILE=local forge test`.
+[profile.local]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.26"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+evm_version = "osaka"
+remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/",
+]
+
+[profile.local.fuzz]
+runs = 512
+
+[rpc_endpoints]
+monad_testnet = "${MONAD_RPC_URL}"
+
+[etherscan]
+# Monad testnet verification endpoint (if/when available) goes here.
