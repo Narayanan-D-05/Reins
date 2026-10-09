@@ -5,7 +5,7 @@ import { indexer } from "envio";
 /// new instance is registered for indexing here as soon as it's created.
 indexer.contractRegister(
   { contract: "ReinsAccountFactory", event: "AccountCreated" },
-  ({ event, context }) => {
+  async ({ event, context }) => {
     context.chain.ReinsAccount.add(event.params.account);
     context.log.info(`Tracking new ReinsAccount at ${event.params.account}`);
   }

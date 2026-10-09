@@ -31,7 +31,7 @@ contracts:
     events:
       - event: "ReceiptRecorded(uint256 indexed receiptId, address indexed account, address indexed payee, address agentKey, uint256 amount, bytes32 category)"
 
-networks:
+chains:
   - id: 10143 # Monad Testnet
     start_block: 0
     contracts:
