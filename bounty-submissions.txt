@@ -1,0 +1,33 @@
+=========================================================
+ENVIO — Best Use of Envio
+=========================================================
+
+Reins uses Envio HyperIndex as the live data layer behind two real, user-facing features, not as a dependency we installed and left idle.
+
+1. Live cross-account event feed (/app/feed). The backend's dashboardService queries Envio's GraphQL endpoint for five indexed event types in one request: PaymentClearedEvent, PaymentBlockedEvent, PolicySetEvent, PausedEvent, and AttestationIssuedEvent, each carrying its account, agent key, amounts, reasons, block number, timestamp, and transaction hash straight from chain. The backend merges all five into one timestamp-sorted feed. The frontend polls this every 10 seconds and renders it as a live, human-readable activity stream across every Reins account on Monad Testnet, not just the connected user's own account. Without Envio this would mean either polling raw event logs ourselves across every ReinsAccount contract address individually (we don't know every account address in advance, since they're deployed dynamically by the factory) or standing up our own indexing pipeline from scratch.
+
+2. The at-risk meter (shown on the public landing page and reused in the dashboard). Envio also indexes a running GlobalStats aggregate: total payments cleared, total payments blocked, total volume cleared, and a breakdown of why payments were blocked (settlement-unverified counterparty, revoked agent, or other). We query this through /dashboard/at-risk-meter and surface it as the "Payments cleared" and "Payments blocked" stats directly on the landing page's live network section, and as a blocked-ratio metric anyone can read with no account and no API key. This is the one number in the whole product that says, in real time, how often Reins is actually stopping something, and it only exists because Envio is indexing every PaymentCleared and PaymentBlocked event as it happens.
+
+
+=========================================================
+MONAD FOUNDATION — Best Mera-Powered UX on Monad
+=========================================================
+
+Mera is not bolted on as an extra login option in Reins, it is the entire account layer for every agent in the system, the thing that actually gives an agent a signing identity on Monad.
+
+Here is the full path: an owner creates exactly one WebAuthn passkey (Face ID, Touch ID, Windows Hello, or a security key). That single passkey creation ceremony requests the WebAuthn PRF extension in the same call as the P256 registration, so one user-verification prompt produces two things at once: the P256 public key that becomes the owner's on-chain control key, and a 32-byte PRF output that is cryptographically bound to that exact passkey and exact salt. That PRF output is fed through standard BIP-44 derivation (via @scure/bip32 and @scure/bip39, exactly as Monad's own Mera integration guide documents) to a secp256k1 private key, which Mera's createSecp256k1SigningSession and toViemAccount turn into a real, usable EVM signing account, the agent's address. No private key is ever generated outside this flow, stored in a database, written to disk, or put in an environment variable anywhere in the stack. If the browser's authenticator doesn't return the PRF output synchronously at creation time (a real, documented authenticator limitation), the app falls back to Mera's own getPasskeyPrfOutput against the same credential, so it still resolves to the same deterministic key with one extra prompt instead of failing.
+
+The UX consequence is the part we actually built for: when an owner creates a Reins account, the agent's spending key simply appears, already derived, already correct, in the policy form's "Agent key" field, with zero manual key management, zero copy-pasted addresses, and zero separate wallet-creation step. There is nothing to lose, write down, or back up, because the key is re-derivable from the same passkey on any device, on demand, which is the exact promise on our own landing page: "re-derivable on any device."
+
+This is live and verifiable, not a mock: a real Monad Testnet account, 0xFeb5596879be7c865E9122A647aBf6a81388ae6a, has a real agent key, 0xa5671746E0938A90B4E960Dc8F5F3e6157c5e29b, derived this way, with a real setPolicy transaction (0x709948c58d2e10a5824c003e2804ed858c13c654c0198f353dac552ed3853563, block 70453030) signed by that owner's passkey authorizing that exact Mera-derived agent key to spend.
+
+
+=========================================================
+MONAD FOUNDATION — Mera: One Passkey, Many Keys
+=========================================================
+
+Beyond deriving the one primary agent key at account-creation time, Reins uses Mera's PRF-based derivation as a general-purpose, on-demand key factory: the same owner passkey can mint any number of additional, independent agent keys, each for a different purpose, without creating a new passkey or a new owner account each time.
+
+Concretely, the policy form on the account page has a "Derive another agent key from this passkey" action. Clicking it calls Mera's getPasskeyPrfOutput against the owner's existing passkey, then derives a new secp256k1 key at the next unused BIP-44 index under m/44'/60'/0'/0/{index}, the owner's passkey stays the root of trust, but each index produces a completely distinct, independently addressable signing key. We show every derived key as a selectable chip (agent #0, agent #1, agent #2, ...), each individually leashable with its own per-payment cap, daily cap, and expiry, and each individually revocable, pulling the reins on agent #2 does nothing to agent #0 or agent #1.
+
+This is deliberately not "non-account" in the sense of being unrelated to Reins, but it is non-account in the sense the bounty is pointing at: it is not the one login/owner-account creation flow (that's the other bounty). It is Mera used as infrastructure for an owner to run many independent, purpose-scoped agents, a procurement agent, a subscription-renewal agent, a data-purchasing agent, from one human passkey, with no additional enrollment ceremony, no seed phrase, and no custodial key storage for any of them. One passkey this device already trusts becomes an arbitrarily large, deterministic, on-demand set of agent keys, which is the literal capability this bounty is named for.

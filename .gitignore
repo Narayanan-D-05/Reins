@@ -25,6 +25,9 @@ indexer/.envio/
 Thumbs.db
 *.log
 
+# Playwright MCP debug output
+.playwright-mcp/
+
 Reins_v4_PRD.md
 rule.md
 sponser.md
