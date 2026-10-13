@@ -21,6 +21,8 @@ const envSchema = z.object({
   ERC8004_IDENTITY_REGISTRY_ADDRESS: addressSchema.default(
     "0x8004A818BFB912233c491871b3d84c89A494BD9e"
   ),
+
+  ENVIO_GRAPHQL_ENDPOINT: z.string().url().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,0 +1,51 @@
+- generic [active] [ref=f30e1]:
+  - generic [ref=f30e2]:
+    - generic [ref=f30e3]:
+      - link "REINS" [ref=f30e4] [cursor=pointer]:
+        - /url: /
+      - navigation [ref=f30e5]:
+        - link "Account" [ref=f30e6] [cursor=pointer]:
+          - /url: /app
+        - link "Agent identity" [ref=f30e7] [cursor=pointer]:
+          - /url: /app/identity
+        - link "Live feed" [ref=f30e8] [cursor=pointer]:
+          - /url: /app/feed
+        - link "Verify attestation" [ref=f30e9] [cursor=pointer]:
+          - /url: /app/attestations
+      - button "Connect wallet" [ref=f30e11]
+    - heading "Agent identity." [level=1] [ref=f30e12]
+    - paragraph [ref=f30e13]: ERC-8004 identity registration, directly against the public registry on Monad Testnet. Reins never relays or holds these transactions.
+    - generic [ref=f30e14]:
+      - generic [ref=f30e15]:
+        - heading "Register an agent identity" [level=3] [ref=f30e16]
+        - paragraph [ref=f30e17]: "ERC-8004 registration is independent of a Reins account: the agent key registers itself directly against the registry. Connect the agent's own wallet here, not the owner wallet used on the Account page."
+        - generic [ref=f30e18]:
+          - text: Agent metadata URI
+          - textbox "Agent metadata URI" [ref=f30e19]:
+            - /placeholder: https://…/agent-card.json
+        - button "Connect a wallet first" [disabled] [ref=f30e20]
+      - generic [ref=f30e21]:
+        - heading "Set agent metadata" [level=3] [ref=f30e22]
+        - paragraph [ref=f30e23]: Writes a key/value pair against an already-registered agent ID. Only that agent's own wallet can set its metadata.
+        - generic [ref=f30e24]:
+          - generic [ref=f30e25]:
+            - text: Agent ID
+            - textbox "Agent ID" [ref=f30e26]:
+              - /placeholder: "1"
+          - generic [ref=f30e27]:
+            - text: Key
+            - textbox "Key" [ref=f30e28]:
+              - /placeholder: capability
+          - generic [ref=f30e29]:
+            - text: Value
+            - textbox "Value" [ref=f30e30]:
+              - /placeholder: procurement
+        - button "Connect a wallet first" [disabled] [ref=f30e31]
+      - generic [ref=f30e32]:
+        - heading "Look up an agent" [level=3] [ref=f30e33]
+        - generic [ref=f30e34]:
+          - textbox "Agent ID" [ref=f30e35]
+          - textbox "Metadata key (optional)" [ref=f30e36]
+          - button "Look up" [ref=f30e37]
+  - button "Open Next.js Dev Tools" [ref=f30e43] [cursor=pointer]
+  - alert [ref=f30e47]

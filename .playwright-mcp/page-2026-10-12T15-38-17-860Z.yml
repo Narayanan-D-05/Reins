@@ -1,0 +1,11 @@
+- generic [active] [ref=f24e1]:
+  - generic [ref=f24e2]:
+    - generic [ref=f24e3]:
+      - link "REINS" [ref=f24e4] [cursor=pointer]:
+        - /url: /
+      - button "Connect wallet" [ref=f24e5]
+    - heading "Run your account." [level=1] [ref=f24e6]
+    - paragraph [ref=f24e7]: Create a passkey-rooted account, set the spending leash for an agent key, and pull the reins the instant something looks wrong. Every action here signs a real transaction on Monad Testnet.
+    - generic [ref=f24e8]: Connect a wallet on Monad Testnet to continue.
+  - button "Open Next.js Dev Tools" [ref=f24e14] [cursor=pointer]
+  - alert [ref=f24e18]

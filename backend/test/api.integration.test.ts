@@ -6,14 +6,19 @@ import { privateKeyToAccount } from "viem/accounts";
 import { publicClient } from "../src/chain/client.js";
 import { ReinsAccountFactoryAbi } from "../src/chain/abiIndex.js";
 import { addresses } from "../src/chain/addresses.js";
+import { env } from "../src/config/env.js";
 import { p256 } from "@noble/curves/nist.js";
 
-/// Integration tests against a REAL local anvil node running the ACTUAL
-/// deployed Reins contracts (see contracts/.env.anvil + Deploy.s.sol) —
-/// no mocked chain calls anywhere in this file. Requires:
+/// Integration tests against whatever REAL chain backend/.env points at —
+/// no mocked chain calls anywhere in this file. The read-only tests below
+/// work against any network. The write-based "account + policy lifecycle"
+/// block additionally needs a funded signer, so it only runs against
+/// local anvil's well-known deterministic test key (chain id 31337) —
+/// never against a real network, where that key has no funds and
+/// shouldn't be used anyway. Local setup:
 ///   anvil --port 8545 --hardfork osaka
 ///   (then deploy with forge script, matching backend/.env)
-const BASE_URL = "http://127.0.0.1:0"; // overwritten once the server picks a port
+const IS_LOCAL_ANVIL = env.MONAD_CHAIN_ID === 31337;
 
 let server: Server;
 let baseUrl: string;
@@ -37,7 +42,6 @@ beforeAll(async () => {
   });
   const port = (server.address() as { port: number }).port;
   baseUrl = `http://127.0.0.1:${port}`;
-  void BASE_URL;
 });
 
 async function post(path: string, body: unknown): Promise<{ status: number; json: any }> {
@@ -63,12 +67,12 @@ describe("health and chain info", () => {
 
   it("GET /chain/info reflects the real connected chain", async () => {
     const { json } = await get("/chain/info");
-    expect(json.chainId).toBe(31337);
+    expect(json.chainId).toBe(env.MONAD_CHAIN_ID);
     expect(json.addresses.factory).toBe(addresses.factory);
   });
 });
 
-describe("account + policy lifecycle against real contracts", () => {
+describe.skipIf(!IS_LOCAL_ANVIL)("account + policy lifecycle against real contracts", () => {
   let newAccount: `0x${string}`;
   const ownerPriv = p256.utils.randomSecretKey();
   const pub = p256.getPublicKey(ownerPriv, false);
@@ -155,6 +159,25 @@ describe("settlement + attestation read endpoints against real contracts", () =>
     const { json } = await get("/attestations/999999/verify");
     expect(json.valid).toBe(false);
     expect(json.reason).toBe("NotFound");
+  });
+});
+
+describe.skipIf(!env.ENVIO_GRAPHQL_ENDPOINT)("dashboard (real Envio indexer)", () => {
+  it("GET /dashboard/feed returns a well-shaped, timestamp-sorted feed", async () => {
+    const { status, json } = await get("/dashboard/feed?limit=5");
+    expect(status).toBe(200);
+    expect(Array.isArray(json.items)).toBe(true);
+    expect(json.items.length).toBeLessThanOrEqual(5);
+    for (let i = 1; i < json.items.length; i++) {
+      expect(Number(json.items[i - 1].timestamp)).toBeGreaterThanOrEqual(Number(json.items[i].timestamp));
+    }
+  });
+
+  it("GET /dashboard/at-risk-meter returns a consistent blocked ratio", async () => {
+    const { status, json } = await get("/dashboard/at-risk-meter");
+    expect(status).toBe(200);
+    expect(json.blockedRatio).toBeGreaterThanOrEqual(0);
+    expect(json.blockedRatio).toBeLessThanOrEqual(1);
   });
 });
 

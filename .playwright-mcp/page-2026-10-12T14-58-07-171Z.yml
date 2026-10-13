@@ -1,0 +1,203 @@
+- generic [active] [ref=f17e1]:
+  - banner [ref=f17e2]:
+    - navigation [ref=f17e4]:
+      - link "REINS" [ref=f17e5] [cursor=pointer]:
+        - /url: "#top"
+      - navigation [ref=f17e8]:
+        - list [ref=f17e9]:
+          - listitem [ref=f17e10] [cursor=pointer]:
+            - link "How it works" [ref=f17e11]:
+              - /url: "#how-it-works"
+          - listitem [ref=f17e12] [cursor=pointer]:
+            - link "Settlement gate" [ref=f17e13]:
+              - /url: "#settlement-gate"
+          - listitem [ref=f17e14] [cursor=pointer]:
+            - link "Network" [ref=f17e15]:
+              - /url: "#network"
+      - link "Verify on Monad" [ref=f17e16] [cursor=pointer]:
+        - /url: https://testnet.monadscan.com/address/0xFB33423DA354A256d95EaC40305422526D2fEdc5
+  - main [ref=f17e17]:
+    - generic [ref=f17e18]:
+      - generic: Attestation valid
+      - generic: Revoked in ~800ms
+      - generic [ref=f17e22]:
+        - heading "A kill switch for spending AI agents." [level=1] [ref=f17e23]
+        - paragraph [ref=f17e24]: Revoke a leaked agent key in under a second. Block payments to counterparties with no real settlement history.
+        - generic [ref=f17e25]:
+          - link "See how it works" [ref=f17e26] [cursor=pointer]:
+            - /url: "#how-it-works"
+          - link "Verify on Monad" [ref=f17e27] [cursor=pointer]:
+            - /url: https://testnet.monadscan.com/address/0xFB33423DA354A256d95EaC40305422526D2fEdc5
+    - generic [ref=f17e30]:
+      - generic [ref=f17e31]:
+        - generic [ref=f17e32]: Monad
+        - generic [ref=f17e33]: P256 precompile
+      - generic [ref=f17e34]:
+        - generic [ref=f17e35]: Mera
+        - generic [ref=f17e36]: Passkey key derivation
+      - generic [ref=f17e37]:
+        - generic [ref=f17e38]: Envio
+        - generic [ref=f17e39]: HyperIndex
+    - generic [ref=f17e40]:
+      - heading "Two failures sit underneath every agent payment." [level=2] [ref=f17e42]
+      - generic [ref=f17e45]:
+        - generic [ref=f17e47]:
+          - generic [ref=f17e48]: 1,275,105
+          - paragraph [ref=f17e49]: AI-service secrets exposed on public GitHub in 2025 alone
+          - paragraph [ref=f17e50]: 64% of secrets leaked back in 2022 are still active and exploitable today. Rotating a key rarely means the leak is actually closed.
+          - paragraph [ref=f17e51]: GitGuardian, State of Secrets Sprawl 2026
+        - generic [ref=f17e53]:
+          - generic [ref=f17e54]: 0 valid
+          - paragraph [ref=f17e55]: feedback entries left after filtering likely Sybil activity
+          - paragraph [ref=f17e56]: "An empirical study of the live ERC-8004 ecosystem found its reputation extension cannot function as a trust signal: feedback is rarely grounded in real transactions and is cheap to fake."
+          - paragraph [ref=f17e57]: Xiong et al., 2026
+    - generic "PULL THE REINS" [ref=f17e61]
+    - generic [ref=f17e64]:
+      - heading "Four stops. One passkey." [level=2] [ref=f17e65]
+      - paragraph [ref=f17e66]: The whole journey of a payment, from the key that authorizes it to the revocation that kills it.
+      - generic [ref=f17e78]:
+        - generic [ref=f17e79]:
+          - heading "Stake" [level=3] [ref=f17e82]
+          - paragraph [ref=f17e83]: The owner derives a signing key for the agent from one WebAuthn passkey, re-derivable on any device.
+          - generic [ref=f17e84]:
+            - generic [ref=f17e85]:
+              - generic [ref=f17e86]: Derivation
+              - generic [ref=f17e87]: BIP-44 path
+            - generic [ref=f17e88]:
+              - generic [ref=f17e89]: Device
+              - generic [ref=f17e90]: Any, re-derivable
+        - generic [ref=f17e91]:
+          - heading "Guard" [level=3] [ref=f17e94]
+          - paragraph [ref=f17e95]: Every agent payment calls pay(). The guard checks the spending policy and the settlement gate first.
+          - generic [ref=f17e96]:
+            - generic [ref=f17e97]:
+              - generic [ref=f17e98]: Entry point
+              - generic [ref=f17e99]: pay()
+            - generic [ref=f17e100]:
+              - generic [ref=f17e101]: Checks
+              - generic [ref=f17e102]: Policy + settlement gate
+        - generic [ref=f17e103]:
+          - heading "Attest" [level=3] [ref=f17e106]
+          - paragraph [ref=f17e107]: A signed statement, checkable by anyone on Monad. It re-checks live state, not a frozen flag.
+          - generic [ref=f17e108]:
+            - generic [ref=f17e109]:
+              - generic [ref=f17e110]: Latency
+              - generic [ref=f17e111]: ~800ms
+            - generic [ref=f17e112]:
+              - generic [ref=f17e113]: Check
+              - generic [ref=f17e114]: Live, not frozen
+        - generic [ref=f17e115]:
+          - heading "Revoke" [level=3] [ref=f17e118]
+          - paragraph [ref=f17e119]: A Face ID assertion, verified on-chain via the P256 precompile, kills the agent from the next block on.
+          - generic [ref=f17e120]:
+            - generic [ref=f17e121]:
+              - generic [ref=f17e122]: Verifier
+              - generic [ref=f17e123]: 0x0100 precompile
+            - generic [ref=f17e124]:
+              - generic [ref=f17e125]: Effect
+              - generic [ref=f17e126]: Next block on
+    - generic [ref=f17e128]:
+      - generic [ref=f17e129]:
+        - heading "No proof. No payment." [level=2] [ref=f17e130]
+        - paragraph [ref=f17e131]: No address can rate, vote on, or vouch for a counterparty. The only inputs are real cleared payments and, optionally, one disclosed external oracle.
+      - generic [ref=f17e133]:
+        - img [aria-hidden] [ref=f17e134]:
+          - generic [ref=f17e135]:
+            - generic [ref=f17e136]: Payment
+            - generic [ref=f17e139]: Tier 1
+            - generic [ref=f17e142]: Tier 2
+            - generic [ref=f17e145]: Clear
+        - generic [ref=f17e148]:
+          - generic [ref=f17e149]:
+            - generic [ref=f17e150]: Tier 1, native score
+            - paragraph [ref=f17e151]: Computed from Reins' own cleared-payment history. Anyone can recompute it from public events.
+          - generic [ref=f17e152]:
+            - generic [ref=f17e153]: Tier 2, external oracle
+            - paragraph [ref=f17e154]: Opt-in, swappable, only used when a counterparty has never transacted through Reins before.
+          - generic [ref=f17e155]:
+            - generic [ref=f17e156]: Probation cap
+            - paragraph [ref=f17e157]: A small trial payment is still allowed, so a brand-new honest counterparty is not locked out forever.
+    - generic [ref=f17e158]:
+      - heading "Read directly from Monad Testnet." [level=2] [ref=f17e159]
+      - paragraph [ref=f17e160]: No account, no API key. These numbers come straight from the deployed contracts.
+      - generic [ref=f17e161]:
+        - generic [ref=f17e162]: Chain ID
+        - generic [ref=f17e166]: Current block
+        - generic [ref=f17e170]: Payments cleared
+        - generic [ref=f17e174]: Payments blocked
+    - generic [ref=f17e178]:
+      - paragraph [ref=f17e179]: One attestation, checkable from any of these, with no account or contract with Reins.
+      - generic [ref=f17e181]:
+        - generic [ref=f17e182]: Google AP2 / UCP
+        - generic [ref=f17e183]: Coinbase x402
+        - generic [ref=f17e184]: Visa Trusted Agent Protocol
+        - generic [ref=f17e185]: Mastercard Agent Pay
+        - generic [ref=f17e186]: ERC-8004 identity
+        - generic [ref=f17e187]: Any outsider's own node
+        - generic [ref=f17e188]: Google AP2 / UCP
+        - generic [ref=f17e189]: Coinbase x402
+        - generic [ref=f17e190]: Visa Trusted Agent Protocol
+        - generic [ref=f17e191]: Mastercard Agent Pay
+        - generic [ref=f17e192]: ERC-8004 identity
+        - generic [ref=f17e193]: Any outsider's own node
+    - generic [ref=f17e194]:
+      - heading "Every fix so far keeps a record or picks a gatekeeper." [level=2] [ref=f17e195]
+      - paragraph [ref=f17e196]: "Anyone running a kill switch today has to choose: trust their database, or trust nobody. This is what is on the board."
+      - generic [ref=f17e197]:
+        - generic [ref=f17e198]:
+          - generic [ref=f17e199]: Approach
+          - generic [ref=f17e200]: Where it breaks for agents
+          - generic [ref=f17e201]: Status
+        - generic [ref=f17e202]:
+          - generic [ref=f17e203]: Skyfire, SatGate, ATXP
+          - generic [ref=f17e204]: Each runs its own database. Checking a revocation means joining that company's platform.
+          - generic [ref=f17e205]: Vendor database
+        - generic [ref=f17e207]:
+          - generic [ref=f17e208]: Displayed trust scores
+          - generic [ref=f17e209]: Reward whoever makes the best-looking badge. Feedback is rarely grounded in a real transaction.
+          - generic [ref=f17e210]: Self-reported
+        - generic [ref=f17e212]:
+          - generic [ref=f17e213]: W3C Status List
+          - generic [ref=f17e214]: The revocation format is neutral, but it's still hosted by the original issuer.
+          - generic [ref=f17e215]: Issuer-hosted
+        - generic [ref=f17e217]:
+          - generic [ref=f17e218]: Okta agent governance
+          - generic [ref=f17e219]: Access control, not spending caps. One company's identity perimeter either way.
+          - generic [ref=f17e220]: Perimeter only
+        - generic [ref=f17e222]:
+          - generic [ref=f17e223]: Reins
+          - generic [ref=f17e224]: Checkable by anyone directly against Monad. Counterparty trust comes from real cleared payments only.
+          - generic [ref=f17e225]: Checkable, not self-reported
+    - generic [ref=f17e227]:
+      - heading "What Reins does not do." [level=2] [ref=f17e228]
+      - paragraph [ref=f17e229]: We would rather you hear it here than find it in production.
+      - generic [ref=f17e230]:
+        - generic [ref=f17e231]:
+          - heading "Cold start looks like fraud." [level=3] [ref=f17e232]
+          - paragraph [ref=f17e233]: A brand-new, honest counterparty has zero settlement history, indistinguishable at first glance from a scam. The probation cap allows a small trial payment instead of an outright block, not a full fix.
+        - generic [ref=f17e234]:
+          - heading "Tier 2 is a vendor dependency, on purpose." [level=3] [ref=f17e235]
+          - paragraph [ref=f17e236]: An external oracle is one company's server for that one check. It's opt-in and swappable, and never the only gate, but it isn't neutral the way Reins' own attestation is.
+        - generic [ref=f17e237]:
+          - heading "A compromised passkey still spends within its last policy." [level=3] [ref=f17e238]
+          - paragraph [ref=f17e239]: Revocation stops a leaked key going forward. It doesn't undo what that key was already allowed to do before you pulled the reins.
+        - generic [ref=f17e240]:
+          - heading "Recovery after a bad payment clears isn't solved yet." [level=3] [ref=f17e241]
+          - paragraph [ref=f17e242]: Reins prevents and reveals; it doesn't yet reverse. A flagged-payment hold is on the roadmap, not in this build.
+    - generic [ref=f17e243]:
+      - heading "Nobody should need an account with us to check if an agent is still trusted." [level=2] [ref=f17e244]
+      - link "Verify on Monad" [ref=f17e246] [cursor=pointer]:
+        - /url: https://testnet.monadscan.com/address/0xFB33423DA354A256d95EaC40305422526D2fEdc5
+  - contentinfo [ref=f17e247]:
+    - generic [ref=f17e248]:
+      - generic [ref=f17e249]:
+        - generic [ref=f17e250]: REINS
+        - paragraph [ref=f17e251]: "Built for the Monad Metropolis Hackathon, Track 04: Trust, Identity & AI Infrastructure."
+      - generic [ref=f17e252]:
+        - link "Monad docs" [ref=f17e253] [cursor=pointer]:
+          - /url: https://docs.monad.xyz
+        - link "Monad faucet" [ref=f17e254] [cursor=pointer]:
+          - /url: https://faucet.monad.xyz
+    - generic [ref=f17e256]: REINS
+  - button "Open Next.js Dev Tools" [ref=f17e262] [cursor=pointer]
+  - alert [ref=f17e266]

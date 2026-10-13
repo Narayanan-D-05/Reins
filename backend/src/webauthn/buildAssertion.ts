@@ -34,7 +34,15 @@ export function buildWebAuthnAssertion(
   const clientDataHash = sha256(toBytes(clientDataJSON));
   const messageHash = sha256(concatBytes(toBytes(authenticatorData), clientDataHash));
 
-  const signature = p256.sign(messageHash, ownerPrivateKey);
+  // `prehash: false` is essential: noble-curves' default (`prehash: true`)
+  // treats the input as a message and re-hashes it with SHA-256 before
+  // signing. `messageHash` here is already the final WebAuthn digest —
+  // Monad's P256 precompile verifies a raw ECDSA signature over exactly
+  // these 32 bytes, with no further hashing. Root-caused against a real
+  // Monad testnet deployment: Foundry's own vm.signP256 cheatcode (which
+  // does not prehash) produced signatures the real precompile accepted;
+  // noble's default output was rejected until this flag was set.
+  const signature = p256.sign(messageHash, ownerPrivateKey, { prehash: false });
   const r = BigInt(bytesToHex(signature.slice(0, 32)));
   const s = BigInt(bytesToHex(signature.slice(32, 64)));
 

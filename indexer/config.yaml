@@ -35,13 +35,10 @@ chains:
   - id: 10143 # Monad Testnet
     start_block: 0
     contracts:
-      # Fill in after `forge script script/Deploy.s.sol:Deploy --broadcast`
-      # in ../contracts — these are the same addresses that go into
-      # ../backend/.env.
       - name: ReinsAccountFactory
-        address: "0x0000000000000000000000000000000000000000"
+        address: "0xFB33423DA354A256d95EaC40305422526D2fEdc5"
       - name: ReinsAccount
       - name: Attestor
-        address: "0x0000000000000000000000000000000000000000"
+        address: "0x686721DcA024BC2d6616BB62338023F2Ca8c912f"
       - name: ReceiptBook
-        address: "0x0000000000000000000000000000000000000000"
+        address: "0x1bD4f7B31Ced5c603790940eecF2Df550333AD0e"

@@ -102,9 +102,9 @@ async function main() {
   log(`Agent key (Mera-derived in production, generated here): ${agentAccount.address}`);
 
   // Fund the agent key with enough gas to send its own transactions.
-  const fundHash = await deployerWallet.sendTransaction({ to: agentAccount.address, value: parseEther("0.05") });
+  const fundHash = await deployerWallet.sendTransaction({ to: agentAccount.address, value: parseEther("0.15") });
   await publicClient.waitForTransactionReceipt({ hash: fundHash });
-  log(`Funded agent key with 0.05 native token (tx ${fundHash})`);
+  log(`Funded agent key with 0.15 native token (tx ${fundHash})`);
 
   // --- Step 2: create the ReinsAccount ---
   const createHash = await deployerWallet.writeContract({
@@ -118,17 +118,17 @@ async function main() {
   const account = `0x${createLog!.topics[2]!.slice(26)}` as Address;
   log(`Created ReinsAccount: ${account}`);
 
-  const depositHash = await deployerWallet.sendTransaction({ to: account, value: parseEther("1") });
+  const depositHash = await deployerWallet.sendTransaction({ to: account, value: parseEther("0.05") });
   await publicClient.waitForTransactionReceipt({ hash: depositHash });
-  log(`Owner deposited 1 native token into the account`);
+  log(`Owner deposited 0.05 native token into the account`);
 
   const PROCUREMENT_CATEGORY = keccak256(toBytes("procurement"));
   const payee = privateKeyToAccount(generatePrivateKey()).address; // a first-time counterparty
 
   // --- Step 3: policy with a settlement threshold the payee can't meet yet ---
   await setPolicy(account, agentAccount.address, ownerPrivateKey, {
-    perPaymentCap: parseEther("0.1"),
-    dailyCap: parseEther("0.5"),
+    perPaymentCap: parseEther("0.01"),
+    dailyCap: parseEther("0.03"),
     expiry: 9_999_999_999n,
     minSettlementAmount: parseEther("1"), // payee has zero history — can't meet this
     minDistinctPayers: 1,
@@ -138,24 +138,24 @@ async function main() {
   });
   log(`Owner set policy for agent (no probation cap yet)`);
 
-  const firstAttempt = await attemptPay(agentWallet, account, payee, parseEther("0.01"), PROCUREMENT_CATEGORY);
+  const firstAttempt = await attemptPay(agentWallet, account, payee, parseEther("0.002"), PROCUREMENT_CATEGORY);
   log(`Payment attempt to first-time counterparty: success=${firstAttempt.success}, reason=${firstAttempt.reason}`);
   if (firstAttempt.success) throw new Error("Expected this payment to be blocked by the settlement gate");
 
   // --- Step 4: raise probation cap, retry ---
   await setPolicy(account, agentAccount.address, ownerPrivateKey, {
-    perPaymentCap: parseEther("0.1"),
-    dailyCap: parseEther("0.5"),
+    perPaymentCap: parseEther("0.01"),
+    dailyCap: parseEther("0.03"),
     expiry: 9_999_999_999n,
     minSettlementAmount: parseEther("1"),
     minDistinctPayers: 1,
-    probationCap: parseEther("0.02"), // small trial payment now allowed
+    probationCap: parseEther("0.003"), // small trial payment now allowed
     externalOracle: zeroAddress,
     categories: [PROCUREMENT_CATEGORY],
   });
   log(`Owner raised the probation cap to allow a small trial payment`);
 
-  const secondAttempt = await attemptPay(agentWallet, account, payee, parseEther("0.01"), PROCUREMENT_CATEGORY);
+  const secondAttempt = await attemptPay(agentWallet, account, payee, parseEther("0.002"), PROCUREMENT_CATEGORY);
   log(`Payment attempt under probation cap: success=${secondAttempt.success}, reason=${secondAttempt.reason}`);
   if (!secondAttempt.success) throw new Error("Expected this payment to clear under the probation cap");
 

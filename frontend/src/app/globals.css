@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+/*
+  Reins — Dark Web3 / Cyberpunk-Minimalist token system.
+  Page Theme Lock (dark-only, see design-taste skill §4.11): this page has
+  exactly one theme. Sections vary surface depth, never hue family.
+
+  Shape Consistency Lock (§4.4): sharp corners (radius 0) on every
+  structural surface (panels, cards, images, inputs). The one documented
+  exception is interactive pressable controls (buttons, pills, badges),
+  which use a full pill radius. No other radius value is used anywhere.
+*/
+:root {
+  --bg: #070a0c;
+  --bg-elevated: #0e1316;
+  --bg-elevated-2: #141a1e;
+  --border: rgba(237, 243, 245, 0.08);
+  --border-strong: rgba(237, 243, 245, 0.16);
+  --text: #e9f1f3;
+  --text-muted: #8b9aa0;
+  --text-faint: #566065;
+  --accent: #4fe1c8;
+  --accent-soft: rgba(79, 225, 200, 0.14);
+  --accent-strong: #8bf2de;
+  --danger: #ef6b5b;
+  --radius-pill: 999px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-elevated-2: var(--bg-elevated-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  background: var(--bg);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+* {
+  border-color: var(--border);
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* Bold condensed display headings — the Quota-reference typographic
+   signature: black weight, uppercase, tight tracking. Reserved for
+   section/hero headlines; body copy stays sentence-case and readable. */
+.display-heading {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+/* Custom easing curves (emil-design-eng: stronger than default CSS easings) */
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
